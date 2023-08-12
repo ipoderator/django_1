@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://app.pachca.com/
+HostUrl=https://pachca-prod-uploads.s3.storage.selcloud.ru/attaches/files/254356/2ef44a38-02c7-4445-ade5-c31e2869ed44/db.sqlite3?response-cache-control=max-age%3D3600%3B&response-content-disposition=attachment&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=142155_staply%2F20230811%2Fru-1a%2Fs3%2Faws4_request&X-Amz-Date=20230811T143426Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=89839d8ad92f8cf7ab9119ab2312381241d4122d6c0a61ed9f13e23c22c6c7b8
