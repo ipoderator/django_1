@@ -4,19 +4,20 @@ from django.utils import timezone
 from .models import Post, Category
 
 COUNT_NUM: int = 5
+TIME = timezone.now()
 
 
 def index(request):
-    """Главная страница проекта"""
-    post_list = Post.objects.select_related(
-        'category'
-    ).filter(pub_date__lte=timezone.now(),
-             is_published=True,
-             category__is_published=True)[:COUNT_NUM]
+    template = 'blog/index.html'
+    post_list = Post.objects.filter(
+        is_published=True,
+        category__is_published=True,
+        pub_date__lte=TIME
+    ).order_by('-created_at')[:COUNT_NUM]
     context = {
-        'post_list': post_list
-    }
-    return render(request, 'blog/index.html', context)
+        'posts': post_list
+        }
+    return render(request, template, context)
 
 
 def post_detail(request, id):
@@ -25,7 +26,7 @@ def post_detail(request, id):
         Post.objects.filter(
             is_published=True,
             category__is_published=True,
-            pub_date__lte=timezone.now(),
+            pub_date__lte=TIME,
             pk=id
         )
     )
@@ -47,7 +48,7 @@ def category_posts(request, category_slug):
     ).filter(
         category=category,
         is_published=True,
-        pub_date__lte=timezone.now()
+        pub_date__lte=TIME
     )
     context = {
         'post_list': post_list
