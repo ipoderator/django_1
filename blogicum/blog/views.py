@@ -43,12 +43,15 @@ def category_posts(request, category_slug):
     )
     post_list = Post.objects.select_related(
         'category',
+        'author',
+        'location'
     ).filter(
         category=category,
         is_published=True,
         pub_date__lte=TIME
     )
     context = {
+        'category': category,
         'post_list': post_list
     }
     return render(request, 'blog/category.html', context)
