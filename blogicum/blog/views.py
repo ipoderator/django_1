@@ -13,24 +13,22 @@ def index(request):
         is_published=True,
         category__is_published=True,
         pub_date__lte=TIME
-    ).order_by('-created_at')[:COUNT_NUM]
-    context = {'posts': post_list}
+    )[:COUNT_NUM]
+    context = {'post_list': post_list}
     return render(request, template, context)
 
 
-def post_detail(request, id):
+def post_detail(request, post_id):
     """Страница категории"""
-    posts = get_object_or_404(
+    post = get_object_or_404(
         Post.objects.filter(
             is_published=True,
             category__is_published=True,
             pub_date__lte=TIME,
-            pk=id
-        )
+        ),
+        pk=post_id
     )
-    context = {
-        'post': posts
-    }
+    context = {'post': post}
     return render(request, 'blog/detail.html', context)
 
 
@@ -41,14 +39,13 @@ def category_posts(request, category_slug):
         slug=category_slug,
         is_published=True
     )
-    post_list = Post.objects.select_related(
-        'category',
-    ).filter(
-        category=category,
+    post_list = Post.objects.filter(
+        category__slug=category_slug,
         is_published=True,
         pub_date__lte=TIME
     )
     context = {
-        'post_list': post_list
+        'category': category,
+        'post_list': post_list,
     }
-    return render(request, 'blog/category.html', context)
+    return render(request, 'blog/category.html', context=context)
