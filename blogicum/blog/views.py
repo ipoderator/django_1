@@ -1,8 +1,10 @@
-from blog.models import Post, Category
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from django.shortcuts import get_object_or_404, render
 
-current_time = timezone.now()
+from .models import Post, Category
+
+COUNT_NUM: int = 5
+TIME = timezone.now()
 
 
 def index(request):
@@ -10,41 +12,40 @@ def index(request):
     post_list = Post.objects.filter(
         is_published=True,
         category__is_published=True,
-        pub_date__lte=timezone.now()
-    ).order_by('-created_at')[:5]
-    context = {'posts': post_list}
+        pub_date__lte=TIME
+    )[:COUNT_NUM]
+    context = {'post_list': post_list}
     return render(request, template, context)
 
 
 def post_detail(request, post_id):
-    template = 'blog/detail.html'
+    """Страница категории"""
     post = get_object_or_404(
         Post.objects.filter(
             is_published=True,
             category__is_published=True,
-            pub_date__lte=timezone.now(),
-            pk=post_id))
+            pub_date__lte=TIME,
+        ),
+        pk=post_id
+    )
     context = {'post': post}
-    return render(request, template, context)
+    return render(request, 'blog/detail.html', context)
 
 
 def category_posts(request, category_slug):
-    template = 'blog/category.html'
+    """Страница отдельной публикации"""
     category = get_object_or_404(
         Category,
         slug=category_slug,
-        is_published=True)
-    category_list = Post.objects.select_related(
-        'category',
-        'author',
-        'location'
-    ).filter(
-        is_published=True,
+        is_published=True
+    )
+    post_list = Post.objects.filter(
         category__slug=category_slug,
-        pub_date__lte=timezone.now()
+        is_published=True,
+        pub_date__lte=TIME
     )
     context = {
         'category': category,
-        'post_list': category_list
+        'post_list': post_list,
     }
-    return render(request, template, context)
+    return render(request, 'blog/category.html', context=context)
