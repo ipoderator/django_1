@@ -14,9 +14,7 @@ def index(request):
         category__is_published=True,
         pub_date__lte=TIME
     ).order_by('-created_at')[:COUNT_NUM]
-    context = {
-        'posts': post_list
-        }
+    context = {'posts': post_list}
     return render(request, template, context)
 
 
